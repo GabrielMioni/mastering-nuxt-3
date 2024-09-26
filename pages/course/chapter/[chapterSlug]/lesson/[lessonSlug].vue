@@ -15,6 +15,7 @@
       <video-player :video-id="lesson.videoId"/>
     </div>
     <p>{{ lesson.text }}</p>
+    <LessonCompleteButton v-model="isComplete"/>
   </div>
 </template>
 
@@ -46,5 +47,40 @@ useHead({
     },
   ],
 });
+
+const progress = useLocalStorage('progress', () => {
+  return []
+})
+
+const isLessonComplete = computed(() => {
+  if (!progress.value[chapter.value.number - 1]) {
+    return false
+  }
+
+  if (!progress.value[chapter.value.number - 1][lesson.value.number - 1]) {
+    return false
+  }
+
+  return progress.value[chapter.value.number - 1][lesson.value.number - 1]
+})
+
+import { computed } from 'vue';
+
+const isComplete = computed({
+  get () {
+    return isLessonComplete.value
+  },
+  set (value) {
+    // Update the progress state based on the new value
+    if (chapter.value && lesson.value) {
+      if (!progress.value[chapter.value.number - 1]) {
+        progress.value[chapter.value.number - 1] = [];
+      }
+      progress.value[chapter.value.number - 1][lesson.value.number - 1] = value;
+    }
+  }
+});
+
+
 
 </script>
