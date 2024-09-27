@@ -36,7 +36,15 @@
     </div>
 
     <div class="prose p-12 bg-white rounded-md w-[65ch]">
-      <NuxtPage/>
+      <NuxtErrorBoundary>
+        <NuxtPage/>
+        <template #error=" { error }">
+          <p>
+            Oh no, something has broke!
+            <code>{{ error }}</code>
+          </p>
+        </template>
+      </NuxtErrorBoundary>
     </div>
   </div>
 </template>
